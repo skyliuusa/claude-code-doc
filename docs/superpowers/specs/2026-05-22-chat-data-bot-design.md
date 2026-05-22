@@ -36,6 +36,8 @@ The project should teach these design ideas:
 - Local JSON persistence for configuration, sessions, messages, and traces.
 - OpenAI-compatible model adapter with provider settings.
 - SiliconFlow profile with API key input, default base URL, model list retrieval, and checkbox model enablement.
+- Z.AI Coding Plan profile with explicit coding-only scope, OpenAI-compatible coding endpoint, and GLM model role assignment.
+- Z.AI media probe adapters for learning image generation and speech-to-text API shapes without adding a separate Z.AI General provider profile.
 - Light model role assignment: default, planner, answerer, evaluator.
 - HTTP/SSE RAGFlow MCP connection.
 - MCP tool discovery and registration into the internal tool registry.
@@ -93,6 +95,7 @@ The backend exposes local API endpoints for:
 - Testing model provider connection.
 - Refreshing provider model list.
 - Reading and saving model role assignments.
+- Running explicit Z.AI image and audio probe calls when enabled for learning.
 - Reading and saving RAGFlow MCP endpoint configuration.
 - Testing MCP connection and listing tools.
 - Creating chat sessions.
@@ -134,6 +137,66 @@ SiliconFlow should be provided as a built-in profile:
 - authorization: bearer token
 
 SiliconFlow model list behavior was verified against the official documentation on 2026-05-22. The documentation describes `GET https://api.siliconflow.cn/v1/models` and supports optional model filters such as `type` and `sub_type`. Reference: https://docs.siliconflow.cn/en/api-reference/models/get-model-list
+
+Z.AI Coding Plan should also be provided as a built-in profile:
+
+- profile id: `zai-coding-plan`
+- display name: `Z.AI Coding Plan`
+- protocol: OpenAI-compatible chat completions
+- default base URL: `https://api.z.ai/api/coding/paas/v4`
+- API key environment hint: `ZHIPU_API_KEY`
+- default models: `glm-5.1`, `glm-5-turbo`, `glm-4.7`, `glm-4.5-air`
+- default extra body for Z.AI GLM models:
+
+```json
+{
+  "thinking": {
+    "type": "enabled",
+    "clear_thinking": false
+  }
+}
+```
+
+The Z.AI Coding Plan profile is intentionally separate from any general Z.AI API profile. This spec does not add a Z.AI General provider. The Coding Plan profile should be labeled `coding-only` and `experimental` in the UI because Z.AI's public documentation states that Coding Plan uses the dedicated coding endpoint and is intended for supported coding tools and scenarios. Reference: https://docs.z.ai/api-reference/introduction
+
+### Provider Usage Policy
+
+The app should keep provider usage explicit:
+
+- `zai-coding-plan` may be used for coding-agent experiments, repository/documentation RAG for development work, API documentation lookup, tool-calling experiments, and OpenCode/OpenClaw-style coding workflow studies.
+- `zai-coding-plan` should not be used as the default route for financial RAG, customer support, roleplay, marketing chat, or broad non-coding knowledge-base workloads.
+- The app must not spoof Claude Code, OpenCode, or OpenClaw client headers, version identifiers, user agents, or session attribution.
+- The app may implement protocol-compatible calls and OpenCode-inspired provider configuration, but it should identify itself truthfully as this local learning project.
+- Non-coding chatbot traffic should be routed to non-Coding-Plan providers such as SiliconFlow or another custom OpenAI-compatible provider.
+
+### Z.AI Media Probes
+
+The project should include explicit learning probes for Z.AI image and audio APIs, but these probes are not part of the core chat data bot loop in v1.
+
+Image generation probe:
+
+- official REST path documented by Z.AI: `POST /images/generations`
+- documented base endpoint: `https://api.z.ai/api/paas/v4/images/generations`
+- models: `glm-image`, `cogview-4-250304`
+- key parameters: `model`, `prompt`, `size`, `quality`
+- reference: https://docs.z.ai/api-reference/image/generate-image
+
+Speech-to-text probe:
+
+- official REST path documented by Z.AI: `POST /audio/transcriptions`
+- documented base endpoint: `https://api.z.ai/api/paas/v4/audio/transcriptions`
+- model: `glm-asr-2512`
+- input: multipart audio file or `file_base64`
+- constraints: `.wav` or `.mp3`, file size up to 25 MB, duration up to 30 seconds
+- reference: https://docs.z.ai/api-reference/audio/audio-transcriptions
+
+Because the public image and audio documentation uses the general `/api/paas/v4` endpoint while Coding Plan uses `/api/coding/paas/v4`, v1 should treat media probes as endpoint compatibility experiments:
+
+1. The UI should state that media probes may not be covered by Coding Plan.
+2. The implementation should allow the probe to be disabled by default.
+3. The trace should record the exact endpoint used, model, status code, and error response.
+4. The app should not silently fall back from the Coding Plan endpoint to a general Z.AI provider profile, because this spec intentionally does not define a Z.AI General provider.
+5. If the media endpoint requires ordinary API billing or rejects the Coding Plan endpoint, the app should show that result as a learning outcome rather than trying to bypass it.
 
 ### Model Discovery
 
@@ -361,6 +424,8 @@ Recommended test layers:
 
 - Unit tests for provider config validation.
 - Unit tests for model discovery response normalization.
+- Unit tests for Z.AI Coding Plan extra body injection.
+- Unit tests for Z.AI media probe request construction and disabled-by-default behavior.
 - Unit tests for MCP tool schema normalization.
 - Unit tests for agent loop stop conditions.
 - Unit tests for clarification policy.
@@ -372,7 +437,9 @@ Manual verification should include:
 
 - Start the local app.
 - Configure SiliconFlow or custom OpenAI-compatible provider.
+- Configure Z.AI Coding Plan for a coding-agent test session.
 - Refresh models and enable at least one chat model.
+- Run disabled-by-default Z.AI image and audio probes only when intentionally enabled, and confirm the trace records endpoint, request shape, response, and any Coding Plan compatibility error.
 - Configure RAGFlow MCP endpoint.
 - Verify tool list appears.
 - Ask a question that succeeds.
@@ -384,14 +451,16 @@ Manual verification should include:
 1. Create the TypeScript project structure with frontend and backend.
 2. Add local JSON persistence.
 3. Build provider configuration and model discovery.
-4. Build MCP HTTP/SSE connection and tool discovery.
-5. Build the internal tool registry.
-6. Build a fake-model and fake-MCP path for deterministic tests.
-7. Implement the bounded agent loop.
-8. Add trace recording.
-9. Build chat UI and trace viewer.
-10. Build model and MCP configuration UI.
-11. Wire real provider and RAGFlow MCP calls.
+4. Add the Z.AI Coding Plan provider profile and extra body handling.
+5. Add disabled-by-default Z.AI image and audio media probes.
+6. Build MCP HTTP/SSE connection and tool discovery.
+7. Build the internal tool registry.
+8. Build a fake-model and fake-MCP path for deterministic tests.
+9. Implement the bounded agent loop.
+10. Add trace recording.
+11. Build chat UI and trace viewer.
+12. Build model and MCP configuration UI.
+13. Wire real provider and RAGFlow MCP calls.
 
 ## Success Criteria
 
@@ -401,18 +470,22 @@ The v1 design is successful when a local user can:
 2. Configure an OpenAI-compatible provider.
 3. Refresh model list and enable models.
 4. Assign planner, answerer, and evaluator roles, with all roles defaulting to the same model.
-5. Configure a local RAGFlow HTTP/SSE MCP endpoint.
-6. See discovered MCP tools.
-7. Ask a mixed financial data question.
-8. See the agent perform planning, MCP tool calls, evaluation, retry, and final answering.
-9. Expand the trace to inspect each loop iteration.
-10. See the agent ask for clarification only after self-repair and retrieval attempts fail.
+5. Configure Z.AI Coding Plan for a coding-agent compatibility session without spoofing another client.
+6. Intentionally enable a Z.AI image or audio probe and inspect the exact endpoint, response, and compatibility result.
+7. Configure a local RAGFlow HTTP/SSE MCP endpoint.
+8. See discovered MCP tools.
+9. Ask a mixed financial data question.
+10. See the agent perform planning, MCP tool calls, evaluation, retry, and final answering.
+11. Expand the trace to inspect each loop iteration.
+12. See the agent ask for clarification only after self-repair and retrieval attempts fail.
 
 ## Open Risks
 
 - RAGFlow MCP's exact tool names and schemas may vary by local setup, so the design must rely on runtime discovery.
 - OpenAI-compatible providers differ in structured output, tool calling, and model metadata support.
 - SiliconFlow's model list endpoint provides useful model IDs, but complete capability detection may still require local profiles or user overrides.
+- Z.AI Coding Plan usage rules are policy-sensitive. The app should not treat technical endpoint compatibility as permission to run non-coding workloads.
+- Z.AI image generation and audio transcription documentation currently describes general `/api/paas/v4` media endpoints, while Coding Plan uses `/api/coding/paas/v4`; media probes may fail or require ordinary API billing.
 - LLM-based planner and evaluator steps may produce invalid JSON unless prompts and parsers are strict.
 - Parallel retrieval probes can increase cost and latency; v1 should keep budgets small and visible.
 
