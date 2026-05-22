@@ -1,0 +1,57 @@
+<h2>5 阶段学习设计</h2>
+<p class="subtitle">目标：同时建立架构理解、复刻能力和安全判断，而不是只记 README 里的功能名。</p>
+
+<div class="mockup">
+  <div class="mockup-header">Learning Architecture</div>
+  <div class="mockup-body">
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px">
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:12px;background:#fff">
+        <div style="font-size:12px;color:#667085;margin-bottom:8px">01</div>
+        <h3 style="margin:0 0 8px">边界</h3>
+        <p style="margin:0;color:#475467">区分事实、推断和不可验证内容。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:12px;background:#fff">
+        <div style="font-size:12px;color:#667085;margin-bottom:8px">02</div>
+        <h3 style="margin:0 0 8px">主架构</h3>
+        <p style="margin:0;color:#475467">CLI 入口、终端 UI、状态和上下文。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:12px;background:#fff">
+        <div style="font-size:12px;color:#667085;margin-bottom:8px">03</div>
+        <h3 style="margin:0 0 8px">工具层</h3>
+        <p style="margin:0;color:#475467">工具注册、权限、风险分类和审批。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:12px;background:#fff">
+        <div style="font-size:12px;color:#667085;margin-bottom:8px">04</div>
+        <h3 style="margin:0 0 8px">Agent 层</h3>
+        <p style="margin:0;color:#475467">子 Agent、多 Agent、记忆和主动模式。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:12px;background:#fff">
+        <div style="font-size:12px;color:#667085;margin-bottom:8px">05</div>
+        <h3 style="margin:0 0 8px">复刻</h3>
+        <p style="margin:0;color:#475467">抽象成自己的最小 CLI Agent 设计。</p>
+      </div>
+    </div>
+
+    <div style="height:18px"></div>
+    <div class="split">
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#f8fafc">
+        <h3 style="margin-top:0">每阶段固定问题</h3>
+        <ul style="margin-bottom:0;color:#475467">
+          <li>这个模块解决什么用户问题？</li>
+          <li>它依赖哪些下层能力？</li>
+          <li>如果自己实现，最小版本是什么？</li>
+          <li>它带来哪些安全风险？</li>
+        </ul>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#f8fafc">
+        <h3 style="margin-top:0">学习产出</h3>
+        <ul style="margin-bottom:0;color:#475467">
+          <li>一张模块关系图</li>
+          <li>一份术语和机制索引</li>
+          <li>一套最小复刻蓝图</li>
+          <li>一份安全检查清单</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

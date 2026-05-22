@@ -1,0 +1,42 @@
+<h2>Claude Code 设计逻辑学习入口</h2>
+<p class="subtitle">这个仓库目前只有一份 README，所以建议先把它当作“架构线索索引”，从稳定主干读到高级机制。</p>
+
+<div class="mockup">
+  <div class="mockup-header">Recommended Reading Flow</div>
+  <div class="mockup-body">
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:stretch">
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <div style="font-size:12px;text-transform:uppercase;color:#667085;margin-bottom:8px">Layer 1</div>
+        <h3 style="margin:0 0 8px">Packaging Leak</h3>
+        <p style="margin:0;color:#475467">先理解 source map 如何暴露 sourcesContent，以及这个仓库的信息边界。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <div style="font-size:12px;text-transform:uppercase;color:#667085;margin-bottom:8px">Layer 2</div>
+        <h3 style="margin:0 0 8px">CLI Runtime</h3>
+        <p style="margin:0;color:#475467">再看 Bun、main.tsx、React + Ink，建立“终端应用如何组织 UI 和状态”的主线。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <div style="font-size:12px;text-transform:uppercase;color:#667085;margin-bottom:8px">Layer 3</div>
+        <h3 style="margin:0 0 8px">Tools + Permissions</h3>
+        <p style="margin:0;color:#475467">这是设计核心：工具注册、运行时过滤、风险分类、权限解释和安全边界。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <div style="font-size:12px;text-transform:uppercase;color:#667085;margin-bottom:8px">Layer 4</div>
+        <h3 style="margin:0 0 8px">Agent Systems</h3>
+        <p style="margin:0;color:#475467">最后读多 Agent、Dream、KAIROS、ULTRAPLAN 等高级模式，理解扩展方向。</p>
+      </div>
+    </div>
+
+    <div style="height:24px"></div>
+    <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:18px">
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#f8fafc">
+        <h3 style="margin-top:0">Primary Question</h3>
+        <p style="margin-bottom:0;color:#475467">你是想学习“设计思想”，还是想进一步复刻一个类似的 CLI Agent 框架？这会决定我们是偏架构阅读，还是偏实现拆解。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#f8fafc">
+        <h3 style="margin-top:0">Caution</h3>
+        <p style="margin-bottom:0;color:#475467">README 不是源码。学习时要把“文档声称”与“可验证设计模式”分开，避免把传闻当实现事实。</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<h2>阶段读法与产出</h2>
+<p class="subtitle">每阶段都用同一个分析框架：产品问题 -> 架构机制 -> 最小复刻 -> 安全风险。</p>
+
+<div class="mockup">
+  <div class="mockup-header">Detailed Learning Plan</div>
+  <div class="mockup-body">
+    <div style="display:grid;grid-template-columns:1fr;gap:12px">
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <h3 style="margin:0 0 8px">1. 信息边界与可信度</h3>
+        <p style="margin:0;color:#475467">读 README 的 leak 机制、What is inside、FAQ、References。产出：事实/推断/待验证三列表，避免把 README 的叙事当作源码事实。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <h3 style="margin:0 0 8px">2. CLI Agent 主架构</h3>
+        <p style="margin:0;color:#475467">读 Runtime、Bun、React + Ink、main.tsx、beta/header/feature flag 相关描述。产出：入口 -> UI -> state -> prompt/context -> model request 的主链路图。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <h3 style="margin:0 0 8px">3. Tool 与 Permission 核心</h3>
+        <p style="margin:0;color:#475467">读 40+ Tool Registry、Permission and Security System、Cyber Risk Instruction。产出：工具接口模型、权限决策流程、风险分类表。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <h3 style="margin:0 0 8px">4. Agent / Memory / Proactive 扩展</h3>
+        <p style="margin:0;color:#475467">读 Multi-Agent、Dream、KAIROS、ULTRAPLAN。产出：同步 agent、异步 agent、后台任务、远程规划四类能力的边界对比。</p>
+      </div>
+      <div style="border:1px solid #d8dee8;border-radius:8px;padding:14px;background:#fff">
+        <h3 style="margin:0 0 8px">5. 最小复刻蓝图</h3>
+        <p style="margin:0;color:#475467">把前四阶段抽象成自己的系统：CLI shell、model loop、tool registry、permission gate、session store、subagent runner。产出：MVP 模块图和安全检查清单。</p>
+      </div>
+    </div>
+  </div>
+</div>
